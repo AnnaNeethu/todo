@@ -1,5 +1,5 @@
 import React from 'react'
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap';
 import { useState, useEffect } from "react";
 import './style.css';
 import "../App.css";
@@ -23,7 +23,7 @@ function Dashboard() {
 
     useEffect(() => {
         const unsubscribe = onSnapshot(
-            query(collection(db, 'todos'), where('email', '==', email)),  // Modify this line
+            query(collection(db, 'todos'), where('email', '==', email)),
             (snapshot) => {
                 setData(snapshot.docs.map((doc) => ({
                     id: doc.id,
@@ -35,7 +35,7 @@ function Dashboard() {
             }
         );
         return () => unsubscribe();
-    }, []);
+    }, [email]);
 
     const toggleDropdown = () => {
         setDropdownOpen(!dropdownOpen);
@@ -56,6 +56,7 @@ function Dashboard() {
         try {
             const todoDocRef = doc(db, 'todos', id);
             await updateDoc(todoDocRef, { isComplete: !isComplete });
+            setIsComplete(!isComplete)
         } catch (error) {
             console.error(error.message);
         }
@@ -65,6 +66,7 @@ function Dashboard() {
         try {
             const todoDocRef = doc(db, 'todos', id);
             await updateDoc(todoDocRef, { favorite: !favorite });
+            setFavorite(favorite)
         } catch (error) {
             console.error(error.message);
         }
